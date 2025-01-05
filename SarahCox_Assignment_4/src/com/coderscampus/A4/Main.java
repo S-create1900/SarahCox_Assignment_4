@@ -3,11 +3,20 @@
 //  3. If you want to turn String input into an Integer, you can parse it like so: Integer myIntVal = Integer.parseInt(myStringVal);
 package com.coderscampus.A4;
 
+import java.util.List;
+
 public class Main {
+    public static void main(String[] args) {
+        // Create an instance of UserService
+        UserService userService = new UserService();
 
-	public static void main(String[] args) {
+        // Step 1: Parse the master list from the CSV file
+        userService.parseMasterList();
 
+        // Step 2: Separate users by course and write to CSV files
+        userService.separateAndWriteUsersByCourse();
 
-	}
-
+        // Step 3: Print a message indicating that the files have been created
+        System.out.println("CSV files for each course have been created successfully.");
+    }
 }

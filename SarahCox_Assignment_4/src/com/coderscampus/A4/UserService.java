@@ -5,76 +5,64 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class UserService {
     private List<User> users = new ArrayList<>();
-    private String csvFilePath;
-    
-    public UserService() {
-    	this.csvFilePath = "src/student-master-list (1).numbers";
-    }
-    
- 
+    private static final String INPUT_FILE_PATH = "src/student-master-list (1).numbers"; // Path to the source file
+
     // Method to parse the master list using BufferedReader
-    public void parseMasterList(String csvfilePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(csvfilePath))) {
+    public void parseMasterList() {
+        try (BufferedReader br = new BufferedReader(new FileReader(INPUT_FILE_PATH))) {
             String line;
-            br.readLine();// Skip the header
+            // Skip the header
+            br.readLine();
 
             while ((line = br.readLine()) != null) {
-                String[] fields = line.split(","); 
-                String studentId = fields[0];
-                String studentName = fields[1];
-                String course = fields[2];
-                int grade = Integer.parseInt(fields[3]); 
-                users.add(new User(studentId, studentName, course, grade)); 
+                String[] fields = line.split(","); // Split by comma
+                String studentId = fields[0].trim(); // Trim to remove any leading/trailing spaces
+                String studentName = fields[1].trim();
+                String course = fields[2].trim();
+                int grade = Integer.parseInt(fields[3].trim()); // Parse as int
+                users.add(new User(studentId, studentName, course, grade)); // Add user to the list
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    
     }
 
-    // Method to separate users into course files
-    public void separateUsersByCourse() {
-        User[] course1Users = new User[users.size()];
-        User[] course2Users = new User[users.size()];
-        User[] course3Users = new User[users.size()];
+    // Method to separate users into course lists and write to CSV files
+    public void separateAndWriteUsersByCourse() {
+        List<User> compsciUsers = new ArrayList<>();
+        List<User> statUsers = new ArrayList<>();
+        List<User> apmthUsers = new ArrayList<>();
 
-        int course1Count = 0, course2Count = 0, course3Count = 0;
-
-        // Separate users based on course
+        // Separate users based on course prefixes
         for (User  user : users) {
-            switch (user.getCourse()) {
-                case "Course1":
-                    course1Users[course1Count++] = user;
-                    break;
-                case "Course2":
-                    course2Users[course2Count++] = user;
-                    break;
-                case "Course3":
-                    course3Users[course3Count++] = user;
-                    break;
+            String course = user.getCourse();
+            if (course.startsWith("COMPSCI")) {
+                compsciUsers.add(user);
+            } else if (course.startsWith("STAT")) {
+                statUsers.add(user);
+            } else if (course.startsWith("APMTH")) {
+                apmthUsers.add(user);
             }
         }
 
         // Write to CSV files
-        writeToCsv("course1.csv", Arrays.copyOf(course1Users, course1Count));
-        writeToCsv("course2.csv", Arrays.copyOf(course2Users, course2Count));
-        writeToCsv("course3.csv", Arrays.copyOf(course3Users, course3Count));
+        writeToCsv("src/course1.csv", compsciUsers);
+        writeToCsv("src/course2.csv", apmthUsers);
+        writeToCsv("src/course3.csv", statUsers);
     }
 
     // Method to write users to a CSV file
-    private void writeToCsv(String filePath, User[] users) {
+    private void writeToCsv(String filePath, List<User> users) {
         try (FileWriter writer = new FileWriter(filePath)) {
             // Write header
             writer.append("Student ID,Student Name,Course,Grade\n");
             // Write user data
             for (User  user : users) {
-                writer.append(user.getStudentID()).append(",")
+                writer.append(user.getStudentId()).append(",")
                       .append(user.getStudentName()).append(",")
                       .append(user.getCourse()).append(",")
                       .append(String.valueOf(user.getGrade())).append("\n");
@@ -84,18 +72,8 @@ public class UserService {
         }
     }
 
-    // Method to display users sorted by grade
-    public void displayUsersByCourse(String course) {
-        User[] courseUsers = users.stream()
-                .filter(user -> user.getCourse().equals(course))
-                .sorted(Comparator.comparingInt(User::getGrade).reversed())
-                .toArray(User[]::new);
-
-        System.out.println("Students in " + course + ":");
-        for (User  user : courseUsers) {
-            System.out.println(user.getStudentID() + ", " + user.getStudentName() + ", " + user.getGrade());
-        }
-        System.out.println();
-    
+    // Method to get the list of users
+    public List<User> getUsers() {
+        return users;
     }
 }
