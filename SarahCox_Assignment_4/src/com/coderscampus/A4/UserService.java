@@ -11,7 +11,7 @@ public class UserService {
 	private String csvFilePath;
 
 	public UserService() {
-		this.csvFilePath = "student-master-list.numbers"; // Set the CSV file path
+		this.csvFilePath = "student-master-list.csv"; // Set the CSV file path
 		this.users = new User[100]; // Initialize with a fixed size (e.g., 100)
 		this.studentCount = 0; // Initialize student count
 		loadUsersFromCsv(); // Load users from the CSV file
@@ -91,28 +91,62 @@ public class UserService {
 		}
 
 		// Sort and write to CSV files
-		writeToCsv("compsci_users.csv", sortUsers(compsciUsers, compsciCount), compsciCount);
-		writeToCsv("stat_users.csv", sortUsers(statUsers, statCount), statCount);
-		writeToCsv("apmth_users.csv", sortUsers(apmthUsers, apmthCount), apmthCount);
+		try {
+			writeToCsv("course1.csv", sortUsers(compsciUsers, compsciCount), compsciCount);
+			writeToCsv("course2.csv", sortUsers(apmthUsers, apmthCount), apmthCount);
+			writeToCsv("course3.csv", sortUsers(statUsers, statCount), statCount);
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
 
-	private void writeToCsv(String string, User[] sortUsers, int compsciCount) {
-		// TODO Auto-generated method stub
-		
+	// Method to write users to a CSV file
+	private void writeToCsv(String filePath, User[] users, int count) throws IOException {
+		try (FileWriter writer = new FileWriter(filePath)) {
+			// Write header
+			try {
+				writer.append("Student ID,Student Name,Course,Grade\n");
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+			// Write user data
+			for (int i = 0; i < count; i++) {
+				if (users[i] != null) {
+					try {
+						writer.write(users[i].getStudentID() + "," + users[i].getStudentName() + ","
+								+ users[i].getCourse() + "," + users[i].getGrade() + "\n");
+					} catch (IOException e) {
+
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
 	}
 
 	// Method to sort users, handling null entries
 	private User[] sortUsers(User[] users, int count) {
-        // Create a new array to hold non-null users
-        User[] nonNullUsers = new User[count];
-        int index = 0;
+		// Create a new array to hold non-null users
+		User[] nonNullUsers = new User[count];
+		int index = 0;
 
-        // Copy non-null users to the new array
-        for (int i = 0; i < count; i++) {
-            if (users[i] != null) {
-                nonNullUsers[index++] = users[i];
-            }
-        }
+		// Copy non-null users to the new array
+		for (int i = 0; i < count; i++) {
+			if (users[i] != null) {
+				nonNullUsers[index++] = users[i];
+			}
+		}
 		return nonNullUsers;
-        }
 	}
+
+	public void printCsvContents() {
+
+	}
+
+	public void printCsvContents(String csvFilePath2) {
+
+	}
+}
