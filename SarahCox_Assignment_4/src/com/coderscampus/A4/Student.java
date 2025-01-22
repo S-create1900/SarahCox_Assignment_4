@@ -1,25 +1,25 @@
 package com.coderscampus.A4;
 //Pojo:  Student ID,Student Name,Course,Grade
 
-public class User {
-	public String studentId;
+public class Student {
+	public int studentId;
 	public String studentName;
 	public String course;
 	public int grade;
-	
-	public User(String studentID, String studentName, String course, int grade) {
-		this.studentId = studentID;
+
+	public Student(int studentId, String studentName, String course, int grade) {
+		this.studentId = studentId;
 		this.studentName = studentName;
 		this.course = course;
 		this.grade = grade;
 	}
 
-	public String getStudentID() {
+	public int getStudentID() {
 		return studentId;
 	}
 
-	public void setStudentID(String studentID) {
-		this.studentId = studentID;
+	public void setStudentID(int studentId) {
+		this.studentId = studentId;
 	}
 
 	public String getStudentName() {
@@ -45,5 +45,5 @@ public class User {
 	public void setGrade(int grade) {
 		this.grade = grade;
 	}
-	
+
 }
