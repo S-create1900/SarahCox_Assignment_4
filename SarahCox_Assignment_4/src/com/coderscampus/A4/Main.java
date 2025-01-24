@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Main {
+public class Main extends StudentService{
 	public static void main(String[] args) {
 		// Create an instance of StudentServiceB4
 		StudentService studentService = new StudentService();
@@ -20,7 +20,7 @@ public class Main {
 		System.out.println("\n" + filePath);
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 			String line;
-			// Read and print each line of the CSV file
+			// Read and print each line of the CSV file to include course number
 			while ((line = reader.readLine()) != null) {
 				System.out.println(line);
 			}
