@@ -9,42 +9,36 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class StudentService {
-	private Student[] students;
-	private int studentCount;
 	private String csvFilePath;
 
 	// Arrays for each course
-	Student[] compSciStudents = new Student[100];
-	Student[] statStudents = new Student[100];
-	Student[] apmthStudents = new Student[100];
+	private Student[] compSciStudents = new Student[100];
+	private Student[] statStudents = new Student[100];
+	private Student[] apmthStudents = new Student[100];
 
 	// Counters for each course
-	int compSciCount = 0;
-	int statCount = 0;
-	int apmthCount = 0;
+	private int compSciCount = 0;
+	private int statCount = 0;
+	private int apmthCount = 0;
 
 	public StudentService() {
 		this.csvFilePath = "student-master-list.csv";
-		this.students = new Student[100];
-		this.studentCount = 0;
-		loadStudentsFromCsv();
+		readStudentsFromCsv();
 		separateAndWriteUsersByCourse();
 	}
 
 	// Step 1: Read student-master-list.csv and create Student objects
-	private void loadStudentsFromCsv() {
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+	private void readStudentsFromCsv() {
+		try (BufferedReader BufferedReader = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
 
-			// Read the header line
-			if ((line = br.readLine()) != null) {
+			if ((line = BufferedReader.readLine()) != null) {
 			}
 
 			// Read each line of the CSV file
-			while ((line = br.readLine()) != null) {
+			while ((line = BufferedReader.readLine()) != null) {
 				String[] data = line.trim().split(",");
 				if (data.length < 4) {
-					System.err.println("Invalid line: " + line);
 					continue;
 				}
 
@@ -68,29 +62,21 @@ public class StudentService {
 		String course = courseWithNumber.replaceAll("\\s*\\d+$", "").trim(); // Extract course name without number
 		if (course.equalsIgnoreCase("COMPSCI")) {
 			if (compSciCount < compSciStudents.length) {
-				compSciStudents[compSciCount++] = new Student(studentId, studentName, courseWithNumber, grade); // Store
-																												// full
-																												// course
-																												// name
+				compSciStudents[compSciCount++] = new Student(studentId, studentName, courseWithNumber, grade);
 			} else {
-				System.err.println("Maximum limit reached for COMPSCI students.");
+				System.err.println("No more COMPSCI students.");
 			}
 		} else if (course.equalsIgnoreCase("STAT")) {
 			if (statCount < statStudents.length) {
-				statStudents[statCount++] = new Student(studentId, studentName, courseWithNumber, grade); // Store full
-																											// course
-																											// name
+				statStudents[statCount++] = new Student(studentId, studentName, courseWithNumber, grade);
 			} else {
-				System.err.println("Maximum limit reached for STAT students.");
+				System.err.println("No more STAT students.");
 			}
 		} else if (course.equalsIgnoreCase("APMTH")) {
 			if (apmthCount < apmthStudents.length) {
-				apmthStudents[apmthCount++] = new Student(studentId, studentName, courseWithNumber, grade); // Store
-																											// full
-																											// course
-																											// name
+				apmthStudents[apmthCount++] = new Student(studentId, studentName, courseWithNumber, grade);
 			} else {
-				System.err.println("Maximum limit reached for APMTH students.");
+				System.err.println("No more APMTH students.");
 			}
 		} else {
 			System.err.println("Unknown course: " + courseWithNumber);
@@ -104,37 +90,30 @@ public class StudentService {
 		Arrays.sort(statStudents, 0, statCount, Comparator.comparingInt(Student::getGrade).reversed());
 		Arrays.sort(apmthStudents, 0, apmthCount, Comparator.comparingInt(Student::getGrade).reversed());
 
-//        // Write sorted students to CSV files
-//        writeStudentsToCsv(compSciStudents, compSciCount, "course1.csv");
-//        writeStudentsToCsv(apmthStudents, apmthCount, "course2.csv");
-//        writeStudentsToCsv(statStudents, statCount, "course3.csv");
+		// Write sorted students to CSV files
+		writeStudentsToCsv(compSciStudents, compSciCount, "course1.csv");
+		writeStudentsToCsv(apmthStudents, apmthCount, "course2.csv");
+		writeStudentsToCsv(statStudents, statCount, "course3.csv");
 	}
 
 	// Method to write students to a CSV file
 	private void writeStudentsToCsv(Student[] students, int count, String fileName) {
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-			bw.write("Student ID,Full Name,Course,Grade\n"); // Write header
+		try (BufferedWriter BufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+			BufferedWriter.write("Student ID,Student Name,Course,Grade\n"); // Write header
 			for (int i = 0; i < count; i++) {
 				if (students[i] != null) {
-					bw.write(students[i].getStudentID() + "," + students[i].getStudentName() + ","
+					BufferedWriter.write(students[i].getStudentID() + "," + students[i].getStudentName() + ","
 							+ students[i].getCourse() + "," + students[i].getGrade() + "\n");
 				}
 			}
-			System.out.println(fileName + " written successfully.");
 		} catch (IOException e) {
-			System.err.println("Error writing to file: " + e.getMessage());
 		}
 	}
 
 	// Step 4: Method to sort students by grade in descending order
 	public void sortStudentsByGrade() {
-		Arrays.sort(students, 0, studentCount, Comparator.comparingInt(Student::getGrade).reversed());
-	}
-
-	// Method to display all students
-	public void displayAllStudents() {
-		for (int i = 0; i < studentCount; i++) {
-			System.out.println(students[i]);
-		}
+		Arrays.sort(compSciStudents, 0, compSciCount, Comparator.comparingInt(Student::getGrade).reversed());
+		Arrays.sort(statStudents, 0, statCount, Comparator.comparingInt(Student::getGrade).reversed());
+		Arrays.sort(apmthStudents, 0, apmthCount, Comparator.comparingInt(Student::getGrade).reversed());
 	}
 }
