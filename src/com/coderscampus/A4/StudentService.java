@@ -1,5 +1,4 @@
 package com.coderscampus.A4;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -95,20 +94,23 @@ public class StudentService {
 		writeStudentsToCsv(apmthStudents, apmthCount, "course2.csv");
 		writeStudentsToCsv(statStudents, statCount, "course3.csv");
 	}
+	
+	private void writeStudentsToCsv(Student[] compSciStudents2, int compSciCount2, String string) {	
+	}
 
 	// Method to write students to a CSV file
-	private void writeStudentsToCsv(Student[] students, int count, String fileName) {
-		try (BufferedWriter BufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-			BufferedWriter.write("Student ID,Student Name,Course,Grade\n"); // Write header
-			for (int i = 0; i < count; i++) {
-				if (students[i] != null) {
-					BufferedWriter.write(students[i].getStudentID() + "," + students[i].getStudentName() + ","
-							+ students[i].getCourse() + "," + students[i].getGrade() + "\n");
-				}
-			}
-		} catch (IOException e) {
-		}
-	}
+//	private void writeStudentsToCsv(Student[] students, int count, String fileName) {
+//		try (BufferedWriter BufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+//			BufferedWriter.write("Student ID,Student Name,Course,Grade\n"); // Write header
+//			for (int i = 0; i < count; i++) {
+//				if (students[i] != null) {
+//					BufferedWriter.write(students[i].getStudentID() + "," + students[i].getStudentName() + ","
+//							+ students[i].getCourse() + "," + students[i].getGrade() + "\n");
+//				}
+//			}
+//		} catch (IOException e) {
+//		}
+//	}
 
 	// Step 4: Method to sort students by grade in descending order
 	public void sortStudentsByGrade() {
